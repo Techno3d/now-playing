@@ -27,16 +27,18 @@ pub fn get_metadata(player: &Player) -> Info {
         for artist in meta.artists().unwrap_or_default() {
             artists += artist;
         }
-        let resp = attohttpc::get(meta.art_url().unwrap_or_default()).send().unwrap();
+        //let resp = attohttpc::get(meta.art_url().unwrap_or_default()).send().unwrap();
+        let url = meta.art_url().unwrap_or_default();
         let mut buffer: ImageBuf = ImageBuf::default();
-        if resp.is_success() {
-            let bytes = resp.bytes().unwrap();
-            let reader = Reader::new(Cursor::new(bytes)).with_guessed_format().expect("Cursor failed??");
-            let img = reader.decode().unwrap();
-            buffer = ImageBuf::from_dynamic_image(img);
-
-            //let png_data = ImageBuf::from_data(&bytes);
-            // println!("{:?}", png_data);
+        if url != "" {
+            let resp = attohttpc::get(url).send().unwrap();
+            if resp.is_success() {
+                let bytes = resp.bytes().unwrap();
+                let reader = Reader::new(Cursor::new(bytes)).with_guessed_format().expect("Cursor failed??");
+                let img = reader.decode().unwrap();
+                buffer = ImageBuf::from_dynamic_image(img);
+            }
+            
         }
         return Info {
             title: meta.title().unwrap_or_default().to_string(),
