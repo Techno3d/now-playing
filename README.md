@@ -1,8 +1,8 @@
 # now-playing
 ## Built with Druid-rs and MPRIS
-On top of the desktop
-Can pause/play, go back/next
-Can interface with players that use MPRIS
+On top of the desktop  
+Can pause/play, go back/next  
+Can interface with players that use MPRIS  
 
 # Images
 ![Close up of now-playing](images/closeup.png)
