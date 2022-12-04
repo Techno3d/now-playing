@@ -1,0 +1,13 @@
+[package]
+name = "now-playing"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+mpris = "2.0.0"
+image = "0.24.5"
+
+druid = { git = "https://github.com/linebender/druid.git", features = ["image", "png", "jpeg"]}
+attohttpc = "0.24.0"    
