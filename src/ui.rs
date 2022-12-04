@@ -52,7 +52,6 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     let artists =  Label::new(|data: &Info, _: &Env| data.artists.to_string())
         .with_font(reg_font.clone());
     let album =  Label::new(|data: &Info, _: &Env| {
-        println!("LMAO2");
         data.album_name.to_string()
     })
         .with_font(reg_font);
@@ -71,7 +70,6 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     }).on_click(move |_, _, _| sx1.send(PlayerCommand::Pause).unwrap_or_default()).disabled_if(|data: &Info, _| data.can_pause);
     let next = Button::new("Next").on_click(move |_, _, _| sx.send(PlayerCommand::Next).unwrap_or_default())
         .disabled_if(|data: &Info, _| {
-            println!("LMAO"); 
             data.can_next
         });
     let close = Button::new("X").on_click(|_ctx, _data: &mut Info, _env| {

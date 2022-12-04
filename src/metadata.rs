@@ -21,7 +21,6 @@ pub enum PlayerCommand {
 }
 
 pub fn get_metadata(player: &Player) -> Info {
-        println!("{}", player.bus_name());
         let meta = player.get_metadata().unwrap();
         let mut artists: String = String::new();
         for artist in meta.artists().unwrap_or_default() {
