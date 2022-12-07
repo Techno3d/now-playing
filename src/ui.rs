@@ -16,6 +16,7 @@ use druid::Widget;
 use druid::WidgetExt;
 use druid::commands;
 use druid::widget::Image;
+use druid::widget::LineBreaking;
 use druid::widget::Padding;
 use druid::widget::SizedBox;
 use druid::widget::{Button, Flex, Label};
@@ -48,13 +49,22 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
 
     // Labels
     let title_label = Label::new(|data: &Info, _: &Env| data.title.to_string())
-        .with_font(title_font);
-    let artists =  Label::new(|data: &Info, _: &Env| data.artists.to_string())
-        .with_font(reg_font.clone());
+        .with_font(title_font)
+        .with_line_break_mode(LineBreaking::WordWrap)
+        .center()
+        .expand_width();
+    let artists =  SizedBox::new(Label::new(|data: &Info, _: &Env| data.artists.to_string())
+        .with_font(reg_font.clone())
+        .with_line_break_mode(LineBreaking::WordWrap)
+        .center())
+        .expand_width();
     let album =  Label::new(|data: &Info, _: &Env| {
         data.album_name.to_string()
     })
-        .with_font(reg_font);
+        .with_font(reg_font)
+        .with_line_break_mode(LineBreaking::WordWrap)
+        .center()
+        .expand_width();
     
     //Buttons
     let sx1 = sx.clone();
@@ -78,14 +88,15 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
 
     let layout = Flex::row().with_child(Padding::new(10.0, DynImage::new()))
         .with_default_spacer()
-        .with_child(Flex::column().with_child(title_label)
+        .with_child(SizedBox::new(Flex::column()
+            .with_child(title_label)
             .with_default_spacer()
             .with_child(artists)
             .with_child(album)
             .with_child(Flex::row().with_child(back).with_default_spacer()
                 .with_child(pause).with_default_spacer()
                 .with_child(next).with_default_spacer()
-            )
+            )).width(260.)
         ).with_child(close);
     return layout;
 }
