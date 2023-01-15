@@ -50,19 +50,19 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     // Labels
     let title_label = Label::new(|data: &Info, _: &Env| data.title.to_string())
         .with_font(title_font)
-        .with_line_break_mode(LineBreaking::WordWrap)
+        .with_line_break_mode(LineBreaking::Clip)
         .center()
         .expand_width();
     let artists =  SizedBox::new(Label::new(|data: &Info, _: &Env| data.artists.to_string())
         .with_font(reg_font.clone())
-        .with_line_break_mode(LineBreaking::WordWrap)
+        .with_line_break_mode(LineBreaking::Clip)
         .center())
         .expand_width();
     let album =  Label::new(|data: &Info, _: &Env| {
         data.album_name.to_string()
     })
         .with_font(reg_font)
-        .with_line_break_mode(LineBreaking::WordWrap)
+        .with_line_break_mode(LineBreaking::Clip)
         .center()
         .expand_width();
     
@@ -141,7 +141,7 @@ impl Widget<Info> for DynImage {
     }
 
     fn update(&mut self, ctx: &mut UpdateCtx, old_data: &Info, data: &Info, _env: &Env) {
-        if !old_data.same(data) {
+        if !old_data.same(data) && !(old_data.art_url == data.art_url) {
             self.rebuild_inner(data);
             ctx.children_changed();
         }
