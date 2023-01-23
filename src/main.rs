@@ -79,5 +79,6 @@ fn main() {
         can_prev: true,
         can_pause: true,
         is_paused: false,
+        min: false
     }).unwrap();
 }

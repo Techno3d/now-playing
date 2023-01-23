@@ -14,6 +14,7 @@ pub struct Info {
     pub can_next: bool,
     pub can_pause: bool,
     pub is_paused: bool,
+    pub min: bool,
 }
 
 pub enum PlayerCommand {
@@ -48,7 +49,8 @@ pub fn get_metadata(player: &Player) -> Info {
             can_prev: !player.can_go_previous().unwrap_or_default(),
             can_pause: !player.can_pause().unwrap_or_default(),
             can_next: !player.can_go_next().unwrap_or_default(),
-            is_paused: player.get_playback_status().unwrap_or(PlaybackStatus::Playing) == PlaybackStatus::Paused
+            is_paused: player.get_playback_status().unwrap_or(PlaybackStatus::Playing) == PlaybackStatus::Paused,
+            min: false
         };
 }
 
