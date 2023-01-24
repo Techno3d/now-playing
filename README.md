@@ -10,5 +10,5 @@ Can interface with players that use MPRIS
 
 
 ## To-Do
-1. Make it click through
 1. Add audio visualizer in the widget
+2. Maybe support other OSes
