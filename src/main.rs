@@ -45,7 +45,8 @@ fn main() {
     }  
 
     if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) {
-        println!("")
+        println!("{}", HELP_MSG);
+        return;
     }
 
     let (sender, reciever) = mpsc::channel::<PlayerCommand>();
