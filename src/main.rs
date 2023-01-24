@@ -1,6 +1,8 @@
 mod metadata;
 mod ui;
+mod config;
 
+use config::get_config;
 use druid::AppLauncher;
 use druid::Screen;
 use druid::WindowDesc;
@@ -19,9 +21,19 @@ use std::time::Duration;
 use std::thread;
 use std::env;
 
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let mut offset = (0., 0.);
     let mut location = ScreenLoc::BottomRight;
+    match get_config() {
+        Some(conf) => {
+            offset = conf.offset;
+            location = conf.location;
+        },
+        None => {},
+    }
+
+    let args: Vec<String> = env::args().collect();
     if args.contains(&"--bottom-right".to_string()) {
         location = ScreenLoc::BottomRight
     } else if args.contains(&"--bottom-left".to_string()) {
@@ -41,17 +53,18 @@ fn main() {
         .transparent(true)
         .show_titlebar(false)
         .window_size((460.0, 160.0))
-        .set_position(place_widget(460., 160., &location, (0., 0.)))
+        .set_position(place_widget(460., 160., &location, offset.clone()))
         .set_level(WindowLevel::Tooltip(WindowHandle::default()));
     let launcher = AppLauncher::with_window(main_window);
     let event_sink = launcher.get_external_handle();
     let sacrifice = location.clone();
+    let sacrifice2 = offset.clone();
     //Connect to player
     let _tracker = thread::spawn(move || {
         loop {
             let player = get_player();
             thread::sleep(Duration::new(1, 0));
-            let mut information = get_metadata(&player, &sacrifice);
+            let mut information = get_metadata(&player, &sacrifice, sacrifice2.clone());
             event_sink.add_idle_callback(move |data: &mut Info| {
                 *data = information;
             });
@@ -62,7 +75,7 @@ fn main() {
                     break;
                 }
                 if tick.progress_changed {
-                    information = metadata::get_metadata(&player, &sacrifice);
+                    information = metadata::get_metadata(&player, &sacrifice, sacrifice2);
                     event_sink.add_idle_callback(move |data: &mut Info| *data = information);
                 }
                 let command = match reciever.recv_timeout(Duration::from_millis(5)) {
@@ -96,6 +109,7 @@ fn main() {
         can_pause: true,
         is_paused: false,
         minimize: false,
-        location
+        location,
+        offset
     }).unwrap();
 }
