@@ -10,9 +10,6 @@ use druid::FontWeight;
 use druid::LayoutCtx;
 use druid::LifeCycle;
 use druid::LifeCycleCtx;
-use druid::Menu;
-use druid::MenuItem;
-use druid::Point;
 use druid::Screen;
 use druid::UnitPoint;
 use druid::UpdateCtx;
@@ -93,7 +90,7 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     let close_svg: SvgData = CLOSE_SVG.parse().unwrap_or_else(|_| SvgData::default());
     let better_close = Svg::new(close_svg).on_click(|ctx, _data: &mut Info, _env| {
         ctx.submit_command(commands::QUIT_APP);
-    }).fix_size(20., 20.).align_vertical(UnitPoint::TOP);
+    }).fix_size(16., 16.).align_vertical(UnitPoint::TOP);
 
     let min_svg: SvgData = MIN_SVG.parse().unwrap();
     let minimize = Svg::new(min_svg).on_click(move |ctx, _data: &mut Info, _env| {
@@ -107,7 +104,7 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
         }
 
         _data.min = !_data.min;
-    }).fix_size(20., 20.).align_vertical(UnitPoint::BOTTOM);
+    }).fix_size(16., 16.).align_vertical(UnitPoint::BOTTOM);
 
     let layout = ZStack::new(Flex::row().with_child(Padding::new(10.0, DynImage::new()))
         .with_default_spacer()
@@ -121,7 +118,10 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
                 .with_child(next).with_default_spacer()
             ), 1.
         )
-    ).with_child(Flex::column().with_child(better_close).with_default_spacer().with_child(minimize), Vec2::new(1., 1.), Vec2::ZERO, UnitPoint::RIGHT, Vec2::ZERO);
+    ).with_child(
+        Flex::column()
+        .with_child(better_close).with_flex_spacer(0.1)
+        .with_child(minimize), Vec2::new(1., 1.), Vec2::ZERO, UnitPoint::RIGHT, Vec2::ZERO);
     return layout;
 }
 
@@ -189,6 +189,8 @@ impl Widget<Info> for DynImage {
         self.inner.id()
     }
 }
+
+
 
 const CLOSE_SVG: &str = r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Svg Vector Icons : http://www.onlinewebfonts.com/icon -->
