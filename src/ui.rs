@@ -97,10 +97,10 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     let minimize = Svg::new(min_svg).on_click(move |ctx, _data: &mut Info, _env| {
         if _data.minimize == false {
             ctx.window().set_size((20., 40.));
-            ctx.window().set_position(place_widget(20., 40., &_data.location, (0., 0.)));
+            ctx.window().set_position(place_widget(20., 40., &_data.location, _data.offset.clone()));
         } else {
             ctx.window().set_size((460., 160.));
-            ctx.window().set_position(place_widget(460., 160., &_data.location, (0., 0.)));
+            ctx.window().set_position(place_widget(460., 160., &_data.location, _data.offset.clone()));
         }
 
         _data.minimize = !_data.minimize;
