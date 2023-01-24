@@ -44,6 +44,9 @@ fn main() {
         location = ScreenLoc::TopLeft
     }  
 
+    if args.contains(&"-h".to_string()) || args.contains(&"--help".to_string()) {
+        println!("")
+    }
 
     let (sender, reciever) = mpsc::channel::<PlayerCommand>();
     let rect = Screen::get_display_rect();
@@ -113,3 +116,5 @@ fn main() {
         offset
     }).unwrap();
 }
+
+const HELP_MSG: &str = "Welcome to Now Playing\n\nConnects to mpris to get what your playing and displays it as a widget on your desktop that is always visible\n\n--bottom-right\tMoves widget to the bottom right corner\n--bottom-left\tMoves widget to the bottom left corner\n--top-right\tMoves widget to the top right corner\n--top-left\tMoves widget to the top left corner\n--help | -h\tDisplays this help message\n--config-example | -c\tCreates an example config file\n\nThe widget placement does not account for any bar or dock, but you can specify your own padding in your $XDG_CONFIG_HOME/now-playing-rs.yml\nalong with your preferred starting corner";
