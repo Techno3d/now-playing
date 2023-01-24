@@ -30,6 +30,7 @@ use druid::Size;
 use druid::widget::{Svg, SvgData};
 use crate::metadata::Info;
 use crate::metadata::PlayerCommand;
+use crate::metadata::ScreenLoc;
 
 pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
     // Fonts
@@ -94,19 +95,20 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
 
     let min_svg: SvgData = MIN_SVG.parse().unwrap();
     let minimize = Svg::new(min_svg).on_click(move |ctx, _data: &mut Info, _env| {
-        let rect = Screen::get_display_rect();
-        if _data.min == false {
+        if _data.minimize == false {
             ctx.window().set_size((20., 40.));
-            ctx.window().set_position((rect.x1-20., rect.y1-40.0));
+            ctx.window().set_position(place_widget(20., 40., &_data.location, (0., 0.)));
         } else {
             ctx.window().set_size((460., 160.));
-            ctx.window().set_position((rect.x1-460., rect.y1-160.0));
+            ctx.window().set_position(place_widget(460., 160., &_data.location, (0., 0.)));
         }
 
-        _data.min = !_data.min;
+        _data.minimize = !_data.minimize;
     }).fix_size(16., 16.).align_vertical(UnitPoint::BOTTOM);
 
-    let layout = ZStack::new(Flex::row().with_child(Padding::new(10.0, DynImage::new()))
+    let layout = ZStack::new(
+        Flex::row()
+        .with_child(Padding::new(5.0, DynImage::new()))
         .with_default_spacer()
         .with_flex_child(Flex::column()
             .with_child(title_label)
@@ -190,7 +192,15 @@ impl Widget<Info> for DynImage {
     }
 }
 
-
+pub fn place_widget(width: f64, height: f64, pos: &ScreenLoc, offset: (f64, f64)) -> (f64, f64) {
+    let rect = Screen::get_display_rect();
+    match pos {
+        ScreenLoc::TopRight => (rect.x1-width -offset.0, rect.y0 +offset.1),
+        ScreenLoc::TopLeft => (rect.x0 +offset.0, rect.y0 +offset.1),
+        ScreenLoc::BottomLeft => (rect.x0 +offset.0, rect.y1-height -offset.1),
+        ScreenLoc::BottomRight => (rect.x1-width -offset.0, rect.y1-height -offset.1),
+    }
+}
 
 const CLOSE_SVG: &str = r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Svg Vector Icons : http://www.onlinewebfonts.com/icon -->

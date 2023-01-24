@@ -14,14 +14,17 @@ pub struct Info {
     pub can_next: bool,
     pub can_pause: bool,
     pub is_paused: bool,
-    pub min: bool,
+    #[data(ignore)]
+    pub minimize: bool,
+    #[data(ignore)]
+    pub location: ScreenLoc,
 }
 
 pub enum PlayerCommand {
     Pause, Next, Prev
 }
 
-pub fn get_metadata(player: &Player) -> Info {
+pub fn get_metadata(player: &Player, location: &ScreenLoc) -> Info {
         let meta = player.get_metadata().unwrap();
         let mut artists: String = String::new();
         for artist in meta.artists().unwrap_or_default() {
@@ -50,7 +53,8 @@ pub fn get_metadata(player: &Player) -> Info {
             can_pause: !player.can_pause().unwrap_or_default(),
             can_next: !player.can_go_next().unwrap_or_default(),
             is_paused: player.get_playback_status().unwrap_or(PlaybackStatus::Playing) == PlaybackStatus::Paused,
-            min: false
+            minimize: false,
+            location: location.clone()
         };
 }
 
@@ -63,4 +67,9 @@ pub fn get_player() -> Player {
         };
         return player;
     }
+}
+
+#[derive(Clone)]
+pub enum ScreenLoc {
+    TopRight, TopLeft, BottomLeft, BottomRight 
 }
