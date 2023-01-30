@@ -9,7 +9,7 @@ edition = "2021"
 mpris = "2.0.0"
 image = "0.24.5"
 
-druid = { git = "https://github.com/linebender/druid.git", features = ["image", "png", "jpeg", "svg"]}
+druid = { version = "0.8.2", features = ["image", "png", "jpeg", "svg"]}
 attohttpc = "0.24.0"    
 directories = "4.0.1"
 serde = { version = "1.0.152", features = ["derive"] }

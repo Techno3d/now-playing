@@ -1,7 +1,7 @@
-use std::{io::Cursor, sync::Arc};
+use std::sync::Arc;
 
 use mpris::{Player, PlayerFinder, PlaybackStatus};
-use druid::{Data, Lens, image::io::Reader, ImageBuf};
+use druid::{Data, Lens, ImageBuf};
 
 #[derive(Data, Clone, Lens)]
 pub struct Info {
@@ -39,9 +39,7 @@ pub fn get_metadata(player: &Player, location: &ScreenLoc, offset: (f64, f64)) -
             let resp = attohttpc::get(url).send().unwrap();
             if resp.is_success() {
                 let bytes = resp.bytes().unwrap();
-                let reader = Reader::new(Cursor::new(bytes)).with_guessed_format().expect("Cursor failed??");
-                let img = reader.decode().unwrap();
-                buffer = ImageBuf::from_dynamic_image(img);
+                buffer = ImageBuf::from_data(&bytes).unwrap_or_default();
             }
             
         }
