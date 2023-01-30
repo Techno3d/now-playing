@@ -5,9 +5,12 @@ mod config;
 use config::create_example;
 use config::get_config;
 use druid::AppLauncher;
+use druid::Color;
 use druid::WindowDesc;
 use druid::WindowHandle;
 use druid::WindowLevel;
+use druid::theme::BUTTON_DARK;
+use druid::theme::BUTTON_LIGHT;
 use metadata::Info;
 use metadata::PlayerCommand;
 use metadata::ScreenLoc;
@@ -63,7 +66,12 @@ fn main() {
         .window_size((460.0, 160.0))
         .set_position(place_widget(460., 160., &location, offset.clone()))
         .set_level(WindowLevel::Tooltip(WindowHandle::default()));
-    let launcher = AppLauncher::with_window(main_window);
+    let launcher = AppLauncher::with_window(main_window)
+        .configure_env(|env, _state| {
+            env.set(BUTTON_DARK, Color::rgba8(40, 40, 40, 200));
+            env.set(BUTTON_LIGHT, Color::rgba8(40, 40, 40, 200));
+
+        });
     let event_sink = launcher.get_external_handle();
     let sacrifice = location.clone();
     let sacrifice2 = offset.clone();

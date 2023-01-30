@@ -100,7 +100,7 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
             ctx.window().set_position(place_widget(20., 40., &_data.location, _data.offset.clone()));
         } else {
             ctx.window().set_size((460., 160.));
-            ctx.window().set_position(place_widget(460., 160., &_data.location, _data.offset.clone()));
+            ctx.window().set_position(place_widget(460., 160., &_data.location, (0., 0.)));
         }
 
         _data.minimize = !_data.minimize;
@@ -111,7 +111,7 @@ pub fn ui_builder(sx: mpsc::Sender<PlayerCommand>) -> impl Widget<Info> {
         .with_child(Padding::new(5.0, DynImage::new()))
         .with_default_spacer()
         .with_flex_child(Flex::column()
-            .with_child(title_label)
+            .with_flex_child(title_label, 0.8)
             .with_default_spacer()
             .with_child(artists)
             .with_child(album)
